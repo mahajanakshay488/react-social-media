@@ -1,6 +1,6 @@
 const io = require('socket.io')(8900,{
     cors:{
-        origin:"http://localhost:3000"
+        origin:"http://localhost:3001"
     }
 });
 
@@ -36,11 +36,13 @@ io.on("connection", (socket)=>{
     socket.on('sendMessege', ({userId, recieverId, text})=>{
         let reciever = getUser(recieverId);
         
-
-        io.to(reciever.socketId).emit('gettMessege',{
-            author:userId,
-            text
-        });
+        if(reciever){
+            console.log('emit msg');
+            io.to(reciever.socketId).emit('gettMessege',{
+                author:userId,
+                text
+            });
+        }
     });
 
     // remove User

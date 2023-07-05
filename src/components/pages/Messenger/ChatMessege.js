@@ -5,8 +5,11 @@ import { bindActionCreators } from "redux";
 import { chatActions } from "../../../store";
 import socket from "../../../services/socket";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 function ChatMessege(props) {
+
+    const {another, chatid } =useParams();
     const {reciever} = props;
     const dispatch = useDispatch();
     const actions = bindActionCreators(chatActions, dispatch);
@@ -29,21 +32,21 @@ function ChatMessege(props) {
         event.preventDefault();
 
         // const recieverId = blogers.filter(b=> b.username === reciever)[0].username;
+        console.log("reciever-chatid", localStorage.getItem('another'), localStorage.getItem('chatid'));
 
-
-        actions.sendMessage(reciever, credentials)
+        actions.sendMessage(another, credentials)
         .then(res=>{
 
             socket.emit('sendMessege', {
                 userId: user.username,
-                recieverId: reciever,
+                recieverId: another,
                 text: credentials.msg
             });
             
            actions.fetchMesseges(res.val)
            .then(res=>{})
            .catch(err=>console.log(err));
-            // console.log("sendmesg", res)
+            console.log("sendmesg", res)
         })
         .catch(err => console.log(err));
 
@@ -51,6 +54,10 @@ function ChatMessege(props) {
     
         setCredentials({...credentials, msg:''});
     }
+
+    useEffect(()=>{
+        console.log();
+    },[])
 
     return (
         <>

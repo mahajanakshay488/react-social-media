@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { chatActions } from "../../../store";
 import socket from "../../../services/socket";
+import { Outlet, Route, Routes } from "react-router-dom";
 
 function Messenger() {
     const theme = useTheme();
@@ -53,7 +54,8 @@ function Messenger() {
                 flex={6}
                 
             >
-                <ChatBox />
+                <Outlet />
+                
             </Box>
             <Box 
                  pl={2}

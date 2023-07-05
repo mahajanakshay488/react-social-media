@@ -5,22 +5,28 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { chatActions } from "../../../store";
+import { useNavigate } from "react-router-dom";
 
 function ChatSection(params) {
 
     const theme = useTheme();
+    const navigate = useNavigate('');
 
     const dispatch = useDispatch();
     const actions = bindActionCreators(chatActions, dispatch);
-    const chats = useSelector(state => state.chat);
+    const state = useSelector(state => state);
+    const user = state.users.user;
+    const chats = state.chat;
 
 
     const [selectedIndex, setSelectedIndex] = React.useState(0);
 
-    const fechMsgs = (chatid)=>{
+    const fechMsgs = (chatid, index)=>{
         actions.fetchMesseges(chatid)
         .then(res=>{
-            // console.log("mess", res);
+            // localStorage.setItem('another', user.msgs[index].another);
+            // localStorage.setItem('chatid', chatid.chatid);
+            // console.log("mess another", localStorage.getItem('another'),localStorage.getItem('chatid'));
         })
         .catch(err =>{
             console.log(err);
@@ -28,7 +34,8 @@ function ChatSection(params) {
     }
     const handleListItemClick = (index, another) => {
         setSelectedIndex(index);
-        fechMsgs(another);
+        fechMsgs(another,index);
+        navigate(`/messenger/${another.another}/${another.chatid}`);
     };
 
     useEffect(() => {
@@ -36,7 +43,7 @@ function ChatSection(params) {
 
         actions.fetchChatsec()
             .then(res => {
-                // fechMsgs(res.value[0]);
+                fechMsgs(user.msgs[selectedIndex]);
                 console.log(res);
             })
             .catch(err => {

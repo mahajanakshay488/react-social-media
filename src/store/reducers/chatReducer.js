@@ -1,4 +1,3 @@
-import { createSlice } from "@reduxjs/toolkit";
 import { chatTypes } from "../constants/action-types";
 
 const initialState = {
@@ -22,8 +21,10 @@ const chatReducer = (state = initialState, action) =>{
         case chatTypes.SEND_MESSEGE :{
             // return {
             //     ...state,
-            //     chatting:state.chatting.push(payload)
+            //     chatting:state.chatting.concat(payload)
             // };
+
+            console.log(payload);
             return state;
         }
         case chatTypes.SET_LOGINUSERS :{

@@ -217,6 +217,9 @@ router.get('/chat/:chatId', isLogedin, (req, res)=>{
 
 router.post('/chat/message/:reciever', isLogedin, (req, res)=>{
   console.log(req.params.reciever, req.body.msg);
+  if(req.params.reciever==undefined){
+    res.status(404).json({status: 'fail', msg: 'reciever is invalid', value: req.params.reciever});
+  }
   userModel.findOne({username: req.session.passport.user})
   .then((foundUser)=>{
     var returnedVal = foundUser.msgs.find(m => m.another === req.params.reciever);

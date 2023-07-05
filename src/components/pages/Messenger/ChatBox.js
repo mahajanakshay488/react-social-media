@@ -7,27 +7,35 @@ import { chatActions } from "../../../store";
 import MessegeComp from "./MessegeComp";
 import { useEffect } from "react";
 import socket from "../../../services/socket";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 function ChatBox(params) {
+
+    let {chatid, another} = useParams();
 
     const dispatch = useDispatch();
     const actions = bindActionCreators(chatActions, dispatch);
     const chats = useSelector(state => state.chat);
-
     
 
     useEffect(()=>{
 
         socket.on('gettMessege', val=>{
             console.log("getMMEssege", val);
-            if(chats.another === val.author){
-                actions.fetchMesseges({chatid: chats.chatting[0].chatid})
+            // let reciever = localStorage.getItem('another');
+            // let chatid = localStorage.getItem('chatid');
+
+            // console.log('local reciever', reciever)
+            if(another === val.author){
+                actions.fetchMesseges({chatid: chatid})
                 .then(res =>{console.log(res)})
                 .catch(err =>{console.log(err)});
             }
         });
 
-        console.log(chats.chatting);
+        // console.log(chats.chatting);
+        // console.log('param')
     });
 
     return (

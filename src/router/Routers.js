@@ -12,6 +12,7 @@ import UserProfile from "../components/pages/UserProfile";
 import BlogerProfile from "../components/pages/BlogerProfile";
 import ProtectedRoute from "./ProtectedRoute";
 import Messenger from "../components/pages/Messenger/Messenger";
+import ChatBox from "../components/pages/Messenger/ChatBox";
   
 function Routers() {
     return ( 
@@ -34,7 +35,12 @@ function Routers() {
             <Route
                 path="/messenger"
                 element={<Messenger />}
-            />
+            >
+                <Route
+                    path=":another/:chatid"
+                    element={<ChatBox/>}
+                />  
+            </Route>
 
             <Route
                 path="/signup"
