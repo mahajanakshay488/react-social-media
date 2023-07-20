@@ -3,13 +3,15 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { bindActionCreators } from "redux";
-import { userActions } from "../../store";
+import { notifyActions, userActions } from "../../store";
+import socket from "../../services/socket";
 
 
 function Login() {
 
     const dispatch = useDispatch();
     const actions = bindActionCreators(userActions, dispatch);
+    const notifys = bindActionCreators(notifyActions, dispatch);
     // const users = useSelector(state => state.users);
 
     const navigate = useNavigate();
@@ -19,23 +21,27 @@ function Login() {
         password: ''
     });
 
+    const fetchNotifys = (username) =>{
+        notifys.fetchNotifys()
+        .then(res => console.log('users notifys...', res))
+        .catch(err => console.log(err));
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         actions.login(credentials)
         .then(res =>{
 
-            if(!res.notLogedin){
+                socket.emit('addUser', res.value.username);
+                fetchNotifys(res.value.username);
                 console.log(res);
                 localStorage.setItem('isAuth', true);
                 localStorage.setItem('User', res.value);
                 navigate('/all-blogs');
-            }else{
-                localStorage.setItem('isAuth', false);
-            }
-            
         })
         .catch(err => {
+            localStorage.setItem('isAuth', false);
             console.log('Login Err',err);
         });
         

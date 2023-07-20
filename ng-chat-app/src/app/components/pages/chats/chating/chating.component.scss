@@ -1,0 +1,37 @@
+.list{
+    height: 100%; 
+    width: 100%; 
+    overflow-y:scroll;
+    position: relative;
+}
+
+.avatar{
+    width: 40px;
+    height: 40px;
+}
+
+mat-card{
+    max-width: 100%;
+}
+
+.cardback{
+    position: relative;
+}
+.time{
+    position: absolute;
+    bottom: -10px;
+    font-size: 12px;
+    color: rgb(160, 160, 160);
+}
+.date{
+    font-size: 12px;
+    color: rgb(160, 160, 160);
+}
+
+// .typingin{
+//     font-style: italic;
+//     color: rgb(227, 75, 29);
+//     position: absolute;
+//     left: 10px;
+//     bottom: 10px;
+// }

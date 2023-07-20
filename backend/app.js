@@ -6,7 +6,7 @@ const logger = require('morgan');
 const expressSession = require('express-session');
 const passport = require("passport");
 const cors = require('cors');
-var whitelist = ['http://localhost:3000','*'];
+var whitelist = ['http://localhost:4200'];
 var corsOptions = {
   credentials: true,
   origin: function(origin, callback) {

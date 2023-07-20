@@ -1,17 +1,21 @@
-import { Icon, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from "@mui/material";
-import { blue } from "@mui/material/colors";
+import { Badge, Icon, List, ListItemButton, ListItemIcon, ListItemText, ListSubheader, Typography } from "@mui/material";
+import { blue, grey } from "@mui/material/colors";
 import { useLocation, useNavigate } from "react-router-dom";
 import PalleteMode from "../../forms/PalleteMode";
 import { useSelector } from "react-redux";
+import { useTheme } from "@emotion/react";
 
 function Sidebar() {
 
     const navigate = useNavigate();
 
     const path = useLocation().pathname;
-
-    const users = useSelector(state => state.users);
+    const theme = useTheme();
+  
+    const state = useSelector(state => state);
+    const users = state.users;
     const user = users.user;
+    const notifications =state.notifys.notifications;
 
     return (
       <List
@@ -49,28 +53,25 @@ function Sidebar() {
         </ListItemButton>
         {
         (users.isAuth)?
-        <ListItemButton 
-            onClick={()=>navigate('/messenger')}
-            sx={
-                (path.startsWith('/messenger'))
-                    ? {bgcolor: blue[400], color: 'text.primary'}
-                    :{color:'text.primary'}
-            } 
+        <a 
+          style={{color: (theme.palette.mode === 'dark')? grey[100]:grey[900]}} 
+          href="http://localhost:4200/messenger"
+          target="_blank"
         >
+        <ListItemButton >
+          
           <ListItemIcon>
+          
+          <Badge badgeContent={(notifications) ? notifications.length : null} color="error">
             <Typography 
-                color={
-                    (path.startsWith('/messenger'))
-                        ?'text.primary'
-                        :''
-                    }
                 >
                 <Icon>messenger</Icon>
             </Typography>
-            
+          </Badge>
           </ListItemIcon>
           <ListItemText primary="Messenger" />
         </ListItemButton>
+        </a>
         :<></>
         }
         <ListItemButton

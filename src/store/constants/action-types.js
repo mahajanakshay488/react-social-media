@@ -32,3 +32,9 @@ export const chatTypes={
     CONNECT_SOCKET: 'CONNECT_SOCKET'
     
 }
+
+export const notifyTypes={
+    FETCH_NOTIFYS: 'FETCH_NOTIFYS',
+    ADD_NOTIFY :'ADD_NOTIFY',
+    REMOVE_NOTIFY:'REMOVE_NOTIFY',
+}

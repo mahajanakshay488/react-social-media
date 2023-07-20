@@ -1,0 +1,16 @@
+<div class="d-flex" id="messenger">
+
+    <div *ngIf="(layouts.tab)" ngClass="{{(!openChat)?'show':'hide'}}" id="chatSecFull">
+        <app-chat-sec></app-chat-sec>
+    </div>
+    <div *ngIf="!(layouts.tab)" id="chatSec">
+        <app-chat-sec></app-chat-sec>
+    </div>
+
+    <div *ngIf="layouts.tab" ngClass="{{(openChat)?'show':'hide'}}" id="chatBoxFull" >
+        <app-chat-box></app-chat-box>
+    </div>
+    <div *ngIf="!layouts.tab" id="chatBox" >
+        <app-chat-box></app-chat-box>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, CardContent, List, ListItemButton, Stack, Typography, useTheme } from "@mui/material";
+import { Avatar, Badge, Box, Card, CardContent, List, ListItemButton, Stack, Typography, useTheme } from "@mui/material";
 import * as React from 'react';
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,13 +9,16 @@ import { useState } from "react";
 function ChatUsers(props) {
 
     const { index, another } = props;
-    const chat = useSelector(state => state.chat);
+    const state = useSelector(state => state);
+    const chat = state.chat;
+    const notifications = state.notifys.notifications;
+    let notify = notifications.filter(v=>v.author === another.another)[0]
 
     const blogs = useSelector(state => state.blogs);
     const [bloger, setBloger] = useState({
         profilepic: '',
         name: '',
-        id:''
+        id: ''
     });
 
     const theme = useTheme();
@@ -31,13 +34,15 @@ function ChatUsers(props) {
     useEffect(() => {
         const data = blogs.blogers.filter(b => b.username === another.another);
         // console.log(data);
-        if(data.length>0){
+        if (data.length > 0) {
             let bl = data[0];
-        setBloger({...bloger, profilepic: bl.profilepic, name: bl.name, id:bl._id});
+            setBloger({ ...bloger, profilepic: bl.profilepic, name: bl.name, id: bl._id });
         }
-        
+
+        console.log('notifys', notifications, another);
+
         // console.log(bloger);
-    },[])
+    }, [])
 
 
     return (
@@ -57,28 +62,48 @@ function ChatUsers(props) {
         // >
 
         <>
-            <Box display={'flex'} flexDirection={"column"} alignItems={'center'} >
+        
+            <Box
+                height={"56px"}
+                width={'56px'}
+                display={'flex'}
+                position={'relative'}
+                flexDirection={"column"}
+                alignItems={'center'}
+            >
+                <Badge badgeContent={(notify) ? notify.msgs.length : null} color="primary">
                 <Avatar
                     alt="Remy Sharp"
                     sx={{ width: "56px", height: '56px' }}
-                    src={'http://localhost:5000/'+bloger.profilepic}
+                    src={'http://localhost:5000/' + bloger.profilepic}
                 />
+                </Badge>
+                
                 <Box
-                    width={"40px"}
-                    height={"4px"}
-                    bgcolor={(chat.loginUsers.some((user)=>user.userId === another.another))?"#50C900":"#dadada"}
+                    position={'absolute'}
+                    bottom={4}
+                    right={4}
+                    width={"10px"}
+                    height={"10px"}
+                    bgcolor={(chat.loginUsers.some((user) => user.userId === another.another)) ? "#50C900" : "transparent"}
                     borderRadius={2}
+                    // boxShadow={1}
                     mt={"4px"}
                 />
             </Box>
 
-
             <CardContent sx={{ flex: '1 0 auto' }}>
-                <Typography color={'text'} component="text" type="text" variant="p">
+                <Typography sx={{ color: theme.palette.text.secondary }} component="text" type="text" variant="p">
                     {bloger.name}
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary" component="div">
-                {another.another}
+                    {
+                    (notify)
+                    ?
+                     ((notify.msgs[notify.msgs.length-1].msg.slice(0,30))+'...')
+                    :
+                    <></>
+                    }
                 </Typography>
             </CardContent>
         </>

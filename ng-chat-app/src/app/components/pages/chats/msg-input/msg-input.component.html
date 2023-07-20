@@ -1,0 +1,23 @@
+<form
+    #form="ngForm"
+    (ngSubmit)="sendMsg()" 
+ class="d-flex p-2"  >
+    <div *ngIf="typingU" class="typingin">
+        <span *ngIf="(chat.chatid == typingU.chatid)">{{chat.another + ' typing..'}}</span>
+    </div>
+<!-- <div class="typingin">
+        <span>typing...</span>
+    </div> -->
+    <input 
+        ngModel
+        name="messege"
+        type="text" 
+        (keypress)="typing()"
+        placeholder="Type here & send messeges.."
+        class="form-control me-2"
+        ngClass="{{(loginUsers?.includes(chat?.another))?'onlineInput':'oflineInput'}}"
+    >
+    <button type="submit" mat-mini-fab  aria-label="send btn" color="primary">
+        <mat-icon>send</mat-icon>
+      </button>
+</form>

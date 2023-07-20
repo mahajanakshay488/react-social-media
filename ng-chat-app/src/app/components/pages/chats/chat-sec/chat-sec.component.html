@@ -1,0 +1,42 @@
+<mat-list>
+    <mat-list-item class=" mt-2" *ngFor="let c of chatsec">
+            <div 
+                role="button" 
+                class="d-flex align-c p-2" 
+                ngClass="{{(c.chatid == activeChat)? 'selected':''}}"
+                (click)="showChat(c)" 
+            >
+            
+            <div ngClass="{{(loginUsers.includes(c.another))?'onlineAvatar':'oflineAvatar'}}" >
+
+                <div class="avatar">
+                    <img src="{{'http://localhost:5000/'+ c.profilepic}}" alt="">
+                </div>
+            </div>
+                
+
+                <div class="ms-2">
+                    <h6 style="margin: 0px;">{{c.name}}</h6>
+                    <div *ngIf="notifys[c.chatid]" >
+                        <small> 
+                            <span class="badge bg-danger">
+                                {{notifys[c.chatid].msgs.length}}
+                            </span>
+                            {{notifys[c.chatid].msgs[notifys[c.chatid].msgs.length-1].msg.substring(0,15)}}..
+                        </small>
+                    </div>
+                    
+                </div>
+            </div>
+    </mat-list-item>
+
+   
+    
+  </mat-list>
+
+  <div   *ngIf="chatsec.length <=0" class="text-center"  >
+        
+    <p class="m-0" >You have no chats.</p>
+    <h6>Connect With People</h6>
+</div>
+  

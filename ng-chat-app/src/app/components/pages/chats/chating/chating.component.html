@@ -1,0 +1,38 @@
+<div #commentDetailWrapper 
+class="p-3 list">
+
+    
+    <div class="mt-4" *ngFor="let msg of messeges, let i = index">
+
+        <p *ngIf="checkDate(msg.time, i)" class="date text-center" >
+            {{msg.time | date: 'dd/MM/yyyy'}}
+        </p>
+        <div 
+            class="d-flex"
+            ngClass="{{(msg.author == username)?'justify-e':''}}"
+        >
+    
+            <div class="d-flex cardback" ngClass="{{(msg.author == username)?'flex-rr':''}}">
+    
+                <div class="avatar mt-2">
+                    <img src="{{(msg.author==username)?'http://localhost:5000/'+userpic:'http://localhost:5000/'+anotherpic }}"
+                        alt="">
+                </div>
+                    <mat-card class="p-2 ps-3 pe-3 m-2">
+                        {{msg.msg}}
+                     </mat-card>    
+                     <small class="time"  
+                     ngClass="{{(msg.author == username)?'me-5':'ms-5'}}"
+                     ><i>{{msg.time| date: 'hh:mm a'}}</i></small>             
+            </div>
+            
+        </div>
+    </div>
+    <!-- <div class="typingin">
+        <span>typing...</span>
+    </div> -->
+    <!-- <div *ngIf="typingU" class="typingin">
+        <span *ngIf="(chatid == typingU.chatid)">typing..</span>
+    </div> -->
+</div>
+

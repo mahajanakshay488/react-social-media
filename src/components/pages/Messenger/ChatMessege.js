@@ -6,6 +6,7 @@ import { chatActions } from "../../../store";
 import socket from "../../../services/socket";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import notifyService from "../../../services/notify.service";
 
 function ChatMessege(props) {
 
@@ -16,7 +17,7 @@ function ChatMessege(props) {
     const state = useSelector(state => state);
     const user = state.users.user;
     const blogers = state.blogs.blogers;
-    const chats = state.chats;
+    const chats = state.chat;
     
 
     const [credentials, setCredentials] = useState({
@@ -32,21 +33,42 @@ function ChatMessege(props) {
         event.preventDefault();
 
         // const recieverId = blogers.filter(b=> b.username === reciever)[0].username;
-        console.log("reciever-chatid", localStorage.getItem('another'), localStorage.getItem('chatid'));
-
+        // console.log("reciever-chatid", localStorage.getItem('another'), localStorage.getItem('chatid'));
+        console.log(another);
         actions.sendMessage(another, credentials)
-        .then(res=>{
+        .then(response=>{
 
             socket.emit('sendMessege', {
                 userId: user.username,
                 recieverId: another,
+                chatid: response.value.chatid,
+                msgid: response.value._id,
                 text: credentials.msg
             });
-            
-           actions.fetchMesseges(res.val)
-           .then(res=>{})
+
+            if(!chats.loginUsers.some(u => u.userId === another)){
+                const notific = {
+                    author: user.username,
+                    reciever: another,
+                    chatid: response.value.chatid,
+                    msgid: response.value._id
+                }
+                console.log('notify added', notific);
+                // notifyService.addNotify(credentials)
+                // .then(res=>{
+                //     console.log('notify added', res);
+                // })
+                // .catch(err =>console.log(err));
+            }
+
+           actions.fetchMesseges(response.value)
+           .then(res=>{
+
+            console.log('fetch messege', res);
+           })
            .catch(err=>console.log(err));
-            console.log("sendmesg", res)
+
+            console.log("sendmesg", response)
         })
         .catch(err => console.log(err));
 
@@ -55,9 +77,9 @@ function ChatMessege(props) {
         setCredentials({...credentials, msg:''});
     }
 
-    useEffect(()=>{
-        console.log();
-    },[])
+    // useEffect(()=>{
+        
+    // },[])
 
     return (
         <>
@@ -68,6 +90,7 @@ function ChatMessege(props) {
             <Box flex={6} >
                     <TextField 
                         name="msg"
+                        size="small"
                         value={credentials.msg}s
                         onChange={handleChange}
                         fullWidth
@@ -75,9 +98,10 @@ function ChatMessege(props) {
                     />
                 </Box>
                 
-                <Box ml={2} flex={1} mt={1}>
+                <Box ml={2} flex={1} mt={2}>
                     <Button 
                        type="submit"
+                       size="small"
                         variant="contained" color="primary" endIcon={<Icon>send</Icon>}>
                         Send
                     </Button>

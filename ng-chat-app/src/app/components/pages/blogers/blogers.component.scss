@@ -1,0 +1,23 @@
+#blogerback{
+    width: 100%;
+    height: 100%;
+}
+
+#search{
+    height: 80px;
+    background-color: aliceblue;
+}
+
+#list{
+    height: calc(100% - 80px);
+}
+
+mat-list{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+app-list{
+    width: 100%;    
+}

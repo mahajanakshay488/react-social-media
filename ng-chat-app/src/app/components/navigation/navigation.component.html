@@ -1,0 +1,85 @@
+      
+      <mat-toolbar *ngIf="!openChat" color="primary"class="d-flex justify-sb">
+    
+       <div>
+        Messenger
+       </div>
+    
+        
+        <div *ngIf="!user" style="height: 100%;" class="d-flex align-c">
+          
+            <a mat-button routerLinkActive="mat-raised-button"  routerLink="/signup">
+                Signup
+            </a>
+
+            <a mat-button routerLinkActive="mat-raised-button" routerLink="/login">
+                Login
+            </a>
+
+        </div>
+
+        <div *ngIf="user" style="height: 100%;" class="d-flex align-c">
+          
+            
+            <button *ngIf="!layouts.handset"  mat-stroked-button (click)="navigate('/blogers')" class="me-3">
+                <mat-icon>search</mat-icon>
+                Connect With People
+            </button>
+                <!-- Chat -->
+                <span class="mt-2" role="button" (click)="navigate('/messenger')">
+                    <mat-icon class="me-3" matBadge="{{notifications.length}}" matBadgeColor="warn">
+                        chat
+                    </mat-icon>
+                </span>
+                
+            
+            
+
+
+            <button mat-button [matMenuTriggerFor]="beforeMenu">
+                <div class="avatar">
+                    <img src="{{'http://localhost:5000/'+userobj.profilepic}}" alt="">
+                </div>
+            </button>
+        <mat-menu #beforeMenu="matMenu" xPosition="before">
+
+        <button mat-menu-item (click)="navigate('/user-profile')" >
+            <mat-icon>account_circle</mat-icon>
+            Profile
+        </button>
+
+        <button mat-menu-item  (click)="navigate('/blogers')" class="me-3">
+            <mat-icon>search</mat-icon>
+            Connect With People
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()" >
+            <mat-icon>logout</mat-icon>
+            Logout
+        </button>
+        
+        </mat-menu>
+
+
+        </div>
+    
+      </mat-toolbar>
+
+      <mat-toolbar *ngIf="openChat">
+        <div (click)="back()" class="me-3">
+            <mat-icon >arrow_back</mat-icon>
+        </div>
+        <div class="d-flex align-c">
+            <div class="avatar me-2">
+                <img src="{{'http://localhost:5000/'+ chater.profilepic}}" alt="">
+            </div>
+            <div>
+                <p class="h6 mt-2">{{chater.name}}</p>
+            </div>
+        </div>
+        
+        
+      </mat-toolbar>
+    
+
+

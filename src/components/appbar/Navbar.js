@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { bindActionCreators } from "redux";
-import { userActions } from "../../store";
+import { chatActions, userActions } from "../../store";
 import { hideMobileView, } from "../../styles/responsiveStyle";
 import PalleteMode from "../forms/PalleteMode";
+import socket from "../../services/socket";
+import notifyService from "../../services/notify.service";
 
 function Navbar() {
 
@@ -14,10 +16,15 @@ function Navbar() {
 
     const dispatch = useDispatch();
     const actions = bindActionCreators(userActions, dispatch);
-    const users = useSelector(state => state.users);
+    const chatactions = bindActionCreators(chatActions, dispatch);
+    const state = useSelector(state => state);
+    const users = state.users;
+    const chat = state.chat;
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+
+   
 
     useEffect(() => {
         // actions.checkAuth()
@@ -50,6 +57,7 @@ function Navbar() {
         handleClose();
         actions.logout()
             .then(res => {
+                socket.emit('userLogout');
                 localStorage.removeItem('isAuth');
                 navigate('/');
             })
@@ -216,11 +224,38 @@ function Navbar() {
                 {
                     (users.isAuth)?
                 <Box pl={2}>
-                    <Avatar
+                    {/* <Avatar
                         src={`http://localhost:5000/${users.user.profilepic}`}
                         sx={{ cursor: 'pointer' }}
                         onClick={handleClick}
-                    />
+                    /> */}
+                    <Box 
+                height={"42px"} 
+                width={'42px'} 
+                display={'flex'} 
+                position={'relative'} 
+                flexDirection={"column"} 
+                alignItems={'center'} 
+            >
+                <Avatar
+                    alt="Remy Sharp"
+                    onClick={handleClick}
+                    sx={{cursor:'pointer'}}
+                    // sx={{ width: "56px", height: '56px' }}
+                    src={'http://localhost:5000/'+users.user.profilepic}
+                />
+                <Box
+                    position={'absolute'}
+                    bottom={4}
+                    right={4}
+                    width={"10px"}
+                    height={"10px"}
+                    bgcolor={(chat.loginUsers.some((user)=>user.userId === users.user.username))?"#50C900":"#dadada"}
+                    borderRadius={2}
+                    boxShadow={1}
+                    mt={"4px"}
+                />
+            </Box>
                 </Box>
                 :''
                 
@@ -244,21 +279,6 @@ function Navbar() {
                         'aria-labelledby': 'basic-button',
                     }}
                 >
-                    <MenuItem
-                        onClick={logout}
-                    >
-                        <IconButton
-
-                            size="small"
-                            aria-label="show 4 new mails"
-                            color="inherit"
-                        >
-
-                            <Icon>logout</Icon>
-
-                        </IconButton>
-                        <p>Logout</p>
-                    </MenuItem>
 
                     <MenuItem
                         onClick={() => {
@@ -277,6 +297,21 @@ function Navbar() {
 
                         </IconButton>
                         <p>Profile</p>
+                    </MenuItem>
+                    <MenuItem
+                        onClick={logout}
+                    >
+                        <IconButton
+
+                            size="small"
+                            aria-label="show 4 new mails"
+                            color="inherit"
+                        >
+
+                            <Icon>logout</Icon>
+
+                        </IconButton>
+                        <p>Logout</p>
                     </MenuItem>
                     <PalleteMode/>
                 </Menu>

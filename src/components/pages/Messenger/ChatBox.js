@@ -1,45 +1,53 @@
-import { Avatar, Box, Button, Card, CardContent, Icon, Stack, TextField, Typography } from "@mui/material";
+import { Box, Stack, Typography, colors, useTheme } from "@mui/material";
 import ChatMessege from "./ChatMessege";
-import { lightBlue, lightGreen, orange, red } from "@mui/material/colors";
+import { blueGrey, lightBlue} from "@mui/material/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import { chatActions } from "../../../store";
 import MessegeComp from "./MessegeComp";
 import { useEffect } from "react";
 import socket from "../../../services/socket";
+import { useLocation, useParams } from "react-router-dom";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import notifyService from "../../../services/notify.service";
 
 function ChatBox(params) {
 
     let {chatid, another} = useParams();
+    let path = useLocation().pathname;
+    const theme = useTheme();
 
     const dispatch = useDispatch();
     const actions = bindActionCreators(chatActions, dispatch);
-    const chats = useSelector(state => state.chat);
+    const state = useSelector(state => state);
+    const blogers = state.blogs.blogers;
+    const chats = state.chat;
+    const user = state.users.user;
+
+    const [pictures, setPictures] = useState({
+        another: '',
+        user: user.profilepic
+    });
     
 
     useEffect(()=>{
 
-        socket.on('gettMessege', val=>{
-            console.log("getMMEssege", val);
-            // let reciever = localStorage.getItem('another');
-            // let chatid = localStorage.getItem('chatid');
+        let bloger = blogers.filter(b => b.username == another)[0];
+        setPictures({...pictures, another: bloger.profilepic});
 
-            // console.log('local reciever', reciever)
-            if(another === val.author){
-                actions.fetchMesseges({chatid: chatid})
-                .then(res =>{console.log(res)})
-                .catch(err =>{console.log(err)});
-            }
-        });
-
-        // console.log(chats.chatting);
-        // console.log('param')
-    });
+        // console.log(bloger);
+        console.log('param', another, chatid);
+    },[]);
 
     return (
-        <Box position={"relative"} height={'100%'} >
+        <Box    pb={{
+            xl:0,
+            lg:0,
+            md:0,
+            sm:0,
+            xs: '60px'
+        }} 
+        width={'100%'} height={'100%'} >
             {/* <Box
                 sx={{
                     display: 'flex',
@@ -76,20 +84,24 @@ function ChatBox(params) {
 
             <Stack
                 width={'100%'}
-                height={'100%'}
+                height={'90%'}
                 overflow={'auto'}
                 spacing={2}
                 pr={2}
                 pl={2}
                 pt={2}
-                pb={'100px'}
+                pb={'10px'}
             >
                 {   
+                (chatid === 'startchat')
+                ?
+                <Typography sx={{color: theme.palette.text.secondary}} variant="h4" m={'auto'} >Start chat with {another}</Typography>
+                :
                 (chats.chatting)?
                     chats.chatting.map((another, index) => (
                         <Box key={another._id}>
 
-                            <MessegeComp msg={another} index={index} />
+                            <MessegeComp prevMsg={chats.chatting[index-1]} pictures={pictures} msg={another} index={index} />
 
                         </Box>
                     ))
@@ -102,23 +114,21 @@ function ChatBox(params) {
             <Box
                 sx={{
                     width: '95%',
-                    position: "absolute",
-                    left: '2.5%',
-                    bottom: "10px",
+                    // position: "absolute",
+                    ml: '2.5%',
+                    // bottom: "10px",
                     borderRadius: 1,
                     boxShadow: 1,
-                    p: 2,
-                    pl: 3,
-                    pr: 3,
-                    bgcolor: lightBlue[50],
+                    // p: 2,
+                    pl: 2,
+                    pr: 2,
+                    pb:1,
+                    bgcolor: theme.palette.background.paper,
                 }}
                 
             >
-                
-                
-                <ChatMessege reciever={chats.another}  />
-                
-                
+                   
+                <ChatMessege reciever={another}  />
             </Box>
         </Box>
     )

@@ -1,0 +1,38 @@
+<div *ngIf="true" id="dialogBox" class="d-flex flex-c align-c">
+
+    <div class="avatar">
+        <img src="{{'http://localhost:5000/'+ data.bloger.profilepic}}" alt="">
+    </div>
+
+    <h5 class="mt-2">{{data.bloger.name}}</h5>
+    <small>{{data.bloger.username}}</small>
+
+    <button *ngIf="connected" type="button" class="btn btn-outline-success mt-3">CONNECTED</button>
+
+    <div *ngIf="!connected" class="d-flex flex-c align-c mt-3">
+        <button type="button" (click)="showM()" class="btn btn-outline-primary">START CHAT</button>
+        
+        <div *ngIf="show" class="mt-3 d-flex align-c">
+            <input  
+            type="text" 
+            placeholder="messege.."
+            class="form-control me-2"
+            [(ngModel)]="msg"
+            >
+            <button type="button"
+                (click)="sendMsg()"
+                 class="btn btn-success"  >
+                Send
+            </button>
+        </div>
+        
+    </div>
+
+   
+
+
+
+    <button id="close" (click)="dialogRef.close()">
+        &#x2715;
+    </button>
+</div>

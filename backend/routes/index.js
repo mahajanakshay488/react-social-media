@@ -4,6 +4,7 @@ var userModel = require('./users');
 var postModel = require('./posts');
 var cmntModel = require('./comments');
 var msgModel = require('./messages');
+var notifyModel = require('./notification');
 var peakyb = require('./peakyb');
 
 var uuid = require('uuid');
@@ -101,6 +102,72 @@ router.get('/comments/:postid', (req, res) => {
   });
 });
 
+//NOtifications
+
+router.post('/notify/add', (req,res)=>{
+  console.log(req.body);
+  const {author, reciever, chatid, msgid} = req.body;
+  // const msg = req.body.msg
+  notifyModel.findOne({author,reciever})
+  .then(notify=>{
+    console.log(notify);
+    if(notify){
+      notify.msgs.push(msgid);
+      notify.save()
+      .then(saved=>{
+        res.status(200).json({status:'success', msg: 'update notifications',value: saved});    
+      })
+    }
+    else{
+      notifyModel.create({
+        author,
+        reciever,
+        chatid,
+      })
+      .then((createdNotify)=>{
+        notifyModel.findById(createdNotify._id)
+        .then(fNotify=>{
+          fNotify.msgs.push(msgid);
+          fNotify.save()
+          .then(saved=>{
+          res.status(200).json({status:'success', msg: 'created notifications',value: saved});
+          })
+          .catch(err =>console.log('saved err', err));
+        });
+
+      }).catch(err =>console.log('creation err',err));
+    }
+
+  })
+  
+});
+
+router.get('/notify/notifications', (req,res)=>{
+  notifyModel.find().populate('msgs')
+  .then((notifications)=>{
+    res.status(200).json({status:'success', value: notifications});
+  });
+});
+
+router.get('/notify/notifications/user', (req,res)=>{
+  notifyModel.find({reciever: req.session.passport.user}).populate('msgs')
+  .then((notifications)=>{
+    console.log('fethc no', notifications);
+    res.status(200).json({status:'success', value: notifications});
+  });
+});
+
+router.delete('/notify/clear/:id', (req,res)=>{
+  if(req.params.id !== undefined || req.params.id !== "undefined"){
+    notifyModel.findByIdAndDelete(req.params.id)
+    .then((deleted)=>{
+      res.status(200).json({status:'success', value: deleted});
+    });
+  }else{
+    res.status(200).json({status:'fail', msg:'undefined id',value: req.params.id});
+  }
+  
+});
 
 // URL restricted 
 
@@ -111,26 +178,6 @@ router.get('/profile', isLogedin, (req, res) => {
   });
 });
 
-
-// posts
-
-// router.post('/post', isLogedin, (req, res) => {
-//   userModel.findOne({username: req.session.passport.user})
-//   .then((foundUser)=> {
-//     postModel.create({
-//       title: req.body.title,
-//       content: req.body.content,
-//       userid: foundUser._id
-//     })
-//     .then((createdPost)=>{
-//       foundUser.posts.push(createdPost);
-//       foundUser.save()
-//       .then((su)=>{
-//         res.status(200).json({status: 'success', msg: 'post created',value: createdPost});
-//       });
-//     });
-//   });
-// });
 
 router.post('/post', [uploadMedia.single('imgfile'),isLogedin], (req, res) => {
   userModel.findOne({username: req.session.passport.user})
@@ -203,8 +250,13 @@ router.get('/post/react/:postid', isLogedin, (req, res)=>{
 router.get('/chat/chatsec', (req, res) => {
   userModel.findOne({username: req.session.passport.user})
   .then((foundUser)=>{
-    var chats = foundUser.msgs;
+    if(foundUser){
+      var chats = foundUser.msgs;
     res.status(251).json({status: 'success', msg: 'User Chats',value: chats, foundUser}); 
+    }else{
+      res.status(251).json({status: 'fail', msg: 'Not found user'}); 
+    }
+    
   });
 });
 
@@ -217,7 +269,7 @@ router.get('/chat/:chatId', isLogedin, (req, res)=>{
 
 router.post('/chat/message/:reciever', isLogedin, (req, res)=>{
   console.log(req.params.reciever, req.body.msg);
-  if(req.params.reciever==undefined){
+  if(req.params.reciever==undefined || req.params.reciever=='undefined'){
     res.status(404).json({status: 'fail', msg: 'reciever is invalid', value: req.params.reciever});
   }
   userModel.findOne({username: req.session.passport.user})
@@ -253,7 +305,7 @@ router.post('/chat/message/:reciever', isLogedin, (req, res)=>{
         msg: req.body.msg,
         chatid: chatId
       }).then((createdMsg)=>{
-        res.status(200).json({msg: 'success', val: createdMsg});
+        res.status(200).json({status:'success', value: createdMsg});
       });
     }
   });
@@ -263,6 +315,7 @@ router.post('/chat/message/:reciever', isLogedin, (req, res)=>{
 // users
 
 router.post('/upload/profilepic', upload.single('imgfile'), function(req, res){
+  console.log(req.file.path);
   userModel.findOne({username: req.session.passport.user})
   .then(function(foundUser){
     var imgadd = `${req.file.path}`;

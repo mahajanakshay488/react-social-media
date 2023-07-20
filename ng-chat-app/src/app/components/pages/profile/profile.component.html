@@ -1,0 +1,22 @@
+<div class="prback d-flex justify-c align-c" >
+    <mat-card *ngIf="user"  class="d-flex flex-c justify-c align-c p-3 container"
+    [ngClass]="(layouts.handset)?'card-sm':'card-md'"
+     >
+
+        <input class="input-file" type="file" (change)="selectedFile($event)" #inputFile>
+    
+        <div id="profile-avatar">
+            <div id="editpic" (click)="inputFile.click()" >
+                <mat-icon>upload</mat-icon>
+                Upload New Pic
+            </div>
+            <div class="avatar" >
+                <img width="100%" height="auto" src="{{'http://localhost:5000/'+user.profilepic}}" class="mx-auto d-block" alt="...">
+            </div>
+        </div>
+        
+        <h5 class="mt-2">{{user.name}}</h5>
+        <p class="text-body-secondary">{{user.username}}</p>
+    </mat-card>
+    <p *ngIf="!user">Wellcome sir, just a min..</p>
+</div>

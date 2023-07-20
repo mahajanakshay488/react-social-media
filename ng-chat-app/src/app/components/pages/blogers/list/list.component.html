@@ -1,0 +1,23 @@
+
+    <mat-card [ngClass]="(layouts.handset)?'w-full':'w-5'" class=" mt-2" *ngFor="let b of blogers">
+            <div 
+                role="button" 
+                class="d-flex align-c p-3" 
+                (click)="showBloger(b)" 
+            >
+            
+            <div ngClass="{{(loginUsers.includes(b.username))?'onlineAvatar':'oflineAvatar'}}" >
+
+                <div class="avatar">
+                    <img src="{{'http://localhost:5000/'+ b.profilepic}}" alt="">
+                </div>
+            </div>
+                
+
+                <div class="ms-2">
+                    <h6 style="margin: 0px;">{{b.name}}</h6>
+                    <small>{{b.username}} djsijdojj</small>
+                </div>
+            </div>
+    </mat-card>
+    

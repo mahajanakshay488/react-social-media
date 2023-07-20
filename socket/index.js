@@ -1,6 +1,6 @@
 const io = require('socket.io')(8900,{
     cors:{
-        origin:"http://localhost:3001"
+        origin:"*"
     }
 });
 
@@ -31,16 +31,41 @@ io.on("connection", (socket)=>{
         io.emit("getUsers", users);
     });
 
+    // typing User
+
+    socket.on('typingUser', (chat)=>{
+        let reciever = getUser(chat.another);
+        if(reciever){
+            io.to(reciever.socketId).emit('typingTrue', chat);
+        }
+        
+    });
+
     // Send Messege
 
-    socket.on('sendMessege', ({userId, recieverId, text})=>{
+    socket.on('sendMessege', ({userId, recieverId, chatid, msgid,text})=>{
         let reciever = getUser(recieverId);
         
         if(reciever){
-            console.log('emit msg');
+            console.log('emit msg', text);
             io.to(reciever.socketId).emit('gettMessege',{
                 author:userId,
+                reciever: recieverId,
+                chatid,
+                msgid,
                 text
+            });
+        }
+    });
+
+    socket.on('startChat', ({author, reciever, chatid})=>{
+        let another = getUser(reciever);
+        if(another){
+            console.log('emit msg', text);
+            io.to(another.socketId).emit('getChatsec',{
+                author,
+                reciever,
+                chatid
             });
         }
     });

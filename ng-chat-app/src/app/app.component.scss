@@ -1,0 +1,21 @@
+mat-drawer-container {
+    height: 100%;
+  }
+
+  main{
+    width: 100%;
+    height: 100%;
+  }
+  .main-tab{
+    // background-color: aquamarine;
+    height: calc(100% - 64px);
+  }
+
+  .main-small{
+    // background-color: aquamarine;
+    height: calc(100% - 56px);
+  }
+
+  .tab-btn{
+    height: 100%;
+  }

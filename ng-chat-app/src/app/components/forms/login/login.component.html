@@ -1,0 +1,37 @@
+<div id="loginDiv" class="d-flex justify-c align-c p-2">
+    <form 
+    #form="ngForm"
+    (ngSubmit)="login()" 
+    class="d-flex flex-c" 
+>
+    <h6 class="display-6 mb-4">Wellcome Back 😍.</h6>
+    <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input 
+            ngModel
+            name="username"
+            matInput 
+            placeholder="Username" 
+            required
+        >
+    </mat-form-field>
+
+      
+    <mat-form-field>
+        <mat-label>Enter your password</mat-label>
+        <input
+            ngModel
+            name="password"
+            matInput 
+            [type]="hide ? 'password' : 'text'"
+        >
+        <button type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+    </mat-form-field>
+
+    <button type="submit" mat-raised-button color="primary">Login</button>
+    &nbsp;
+    <a routerLink="/signup">Don't have an account. create new</a>
+</form>
+</div>

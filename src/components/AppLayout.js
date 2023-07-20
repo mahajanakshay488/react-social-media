@@ -1,6 +1,5 @@
 import { Box, Stack, styled, useTheme } from "@mui/material";
-import { BrowserRouter, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import Routers from "../router/Routers";
 import Navbar from "./appbar/Navbar";
 import Leftbar from "./appbar/leftbar/Leftbar";
@@ -30,11 +29,11 @@ const LeftBox = styled(Box)(({ theme }) => ({
 const StyledBox = styled(Box)(({ theme }) => ({
     position: 'absolute',
     zIndex: 1,
-    bottom: 30,
-    left: 30,
+    bottom: 20,
+    left: 20,
     margin: '0 auto',
     display: 'flex',
-    [theme.breakpoints.down('sm')]: {
+    [(theme.breakpoints.down('sm'))]: {
         display: 'none'
     }
 }));
@@ -49,10 +48,11 @@ function AppLayout() {
         <>
             <Navbar />
 
-            <Stack bgcolor={theme.palette.background.paper} direction={'row'} spacing={{
+            <Stack bgcolor={(theme.palette.mode === 'dark')?theme.palette.grey[900]:theme.palette.grey[200]} direction={'row'} spacing={{
                 md: 2,
                 sm: 0
-            }}>
+            }}
+            >
                 <LeftBox flex={(path.startsWith('/messenger')?1:1.6)} bgcolor={theme.palette.background.paper} >
                     <Leftbar />
                 </LeftBox>
@@ -63,24 +63,27 @@ function AppLayout() {
                     overflow={'auto'}
                     p={{
                         xs: 0,
-                        sm: 0
+                        sm: 0,
+                        md:2
                     }}
-                    flex={6} bgcolor={theme.palette.background.paper}
+                    flex={6}
                     className='backLayer'
                 >
                     <Routers />
                 </Box>
 
-                <RightBox display={(path.startsWith('/messenger')?'none':'flex')} className="rightbox" bgcolor={theme.palette.background.paper} >
+                <RightBox display={(path.startsWith('/messenger')?'none':'flex')} className="rightbox"  >
                     <Rightbar />
                 </RightBox>
             </Stack>
 
             {
-            (!path.startsWith('/messenger'))
+            (!path.includes('/messenger'))
             ?
-            <StyledBox>
-                <AddPost size='large' />
+            <StyledBox
+            display={(path.startsWith('/messenger'))?'none':'flex'}
+            >
+                <AddPost size='medium' />
             </StyledBox>
             :
             <></>
