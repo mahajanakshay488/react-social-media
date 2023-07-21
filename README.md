@@ -1,19 +1,15 @@
-# Social Media App
+# Complete Social Media Web App
 
-Fix Navbar | Sidebar | Bottombar
-Post Likes
+* Project Sample Video Link:
+  https://www.linkedin.com/posts/akshay-mahajan-7a15481a7_mernstack-meanstack-websockets-activity-7088004609213890560-Yd4a?utm_source=share&utm_medium=member_desktop
 
-profiles with Model
 
-ProfilePic with Msgs
+# FEATURES
+_Authentication. 
+_Upload profile picture.
+_Post a blog with picture.
+_Real-Time chat.
 
-Messege Notification
-Messenger UI
-
-Go Back Feature
-
-# Signin/Signup
-
-# Post a blog
-
-# Realtime Chat
+# TECHNOLOGY
+MEAN/MERN STACK
+WEB SOCKETS
