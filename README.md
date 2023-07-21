@@ -1,7 +1,7 @@
 # Complete Social Media Web App
 
 * Project Sample Video Link:
-  https://www.linkedin.com/posts/akshay-mahajan-7a15481a7_mernstack-meanstack-websockets-activity-7088004609213890560-Yd4a?utm_source=share&utm_medium=member_desktop
+  https://www.linkedin.com/posts/akshay-mahajan-7a15481a7_mernstack-meanstack-websockets-activity-7088004609213890560-Yd4a
 
 
 # FEATURES
